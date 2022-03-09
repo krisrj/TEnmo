@@ -7,7 +7,10 @@ import java.util.List;
 
 public interface AccountDao {
 
+    BigDecimal findBalanceByUserId(Long userId);
+
     List<Account> findAllAccounts();
 
-    BigDecimal findBalanceUserId(Long userId);
+
+
 }

@@ -2,6 +2,7 @@ package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Account;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -18,7 +19,24 @@ public class JdbcAccountDao implements AccountDao{
 
     @Override
     public BigDecimal findBalanceByUserId(Long userId) {
-        String sql = "SELECT balance"
+       String sql = "Select balance\n" +
+               "From tenmo_user t \n" +
+               "Join account a On t.user_id = a.user_id\n" +
+               "Where t.user_id = ?";
+
+        BigDecimal balance = jdbcTemplate.queryForObject(sql, BigDecimal.class, userId);
+
+       return balance;
+    }
+
+    private Account mapRowToAccount(SqlRowSet resultSet) {
+        Account account = new Account();
+        account.setAccount_id(resultSet.getLong("account_id"));
+        account.setUser_id(resultSet.getLong("user_Id"));
+        account.setBalance(resultSet.getBigDecimal("balance"));
+
+
+        return account;
     }
     
     //TODO Implement these two methods
@@ -27,8 +45,5 @@ public class JdbcAccountDao implements AccountDao{
         return null;
     }
 
-    @Override
-    public BigDecimal findBalanceUserId(Long userId) {
-        return null;
-    }
+
 }
