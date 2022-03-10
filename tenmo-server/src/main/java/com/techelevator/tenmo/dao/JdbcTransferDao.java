@@ -1,8 +1,10 @@
 package com.techelevator.tenmo.dao;
 
+import com.techelevator.tenmo.model.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
@@ -14,6 +16,9 @@ public class JdbcTransferDao implements TransferDao{
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private AccountDao accountDao;
 
 //    @Override
 //    public String sendTransfer(Long senderId, Long receiverId, BigDecimal amount) {
@@ -42,13 +47,23 @@ public class JdbcTransferDao implements TransferDao{
 //    }
 
     @Override
-    public String newTransfer(Long senderId, Long receiverId, BigDecimal amountToTransfer) {
+    public BigDecimal updateSenderBalance(BigDecimal amount, Long senderId) {
+        return null;
+    }
+
+    @Transactional
+    @Override
+    public String newTransferv1(Long senderId, Long receiverId, BigDecimal amountToTransfer) {
         // Sql string to insert into Transfer
-        String sql = "INSERT INTO transfer"
+        String sql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, " +
+                "account_from, account_to, amount) " +
+                "VALUES (2, 2, ?, ?, ?);";
         // This updates the empty values that were inserted with the included
         // values
-        jdbcTemplate.update(sql, senderId, receiverId);
-
+        jdbcTemplate.update(sql, senderId, receiverId, amountToTransfer);
+        accountDao.addToBalance(receiverId, amountToTransfer);
+        accountDao.subtractFromBalance(senderId, amountToTransfer);
+        return "Transfer complete.";
     }
 
     @Override

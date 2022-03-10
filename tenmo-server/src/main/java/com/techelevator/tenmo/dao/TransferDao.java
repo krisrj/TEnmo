@@ -7,6 +7,8 @@ public interface TransferDao {
 
    BigDecimal updateSenderBalance(@Valid BigDecimal amount, Long senderId);
 
+   String newTransferv1(Long senderId, Long receiverId, BigDecimal amountToTransfer);
+
    BigDecimal updateReceiverBalance(BigDecimal amount, Long receiverId);
 
    BigDecimal updateSenderBalance(Long senderId);

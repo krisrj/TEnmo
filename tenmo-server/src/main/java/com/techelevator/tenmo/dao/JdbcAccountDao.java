@@ -11,7 +11,7 @@ import java.util.List;
 @Component
 public class JdbcAccountDao implements AccountDao{
 
-    public BigDecimal testAmount = new BigDecimal(50);
+  //  public BigDecimal testAmount = new BigDecimal(50);
     private JdbcTemplate jdbcTemplate;
 
     public JdbcAccountDao(JdbcTemplate jdbcTemplate) {
@@ -29,21 +29,21 @@ public class JdbcAccountDao implements AccountDao{
 
     //TODO Remember to swap testAmount for actual amountToAdd
     @Override
-    public BigDecimal addToBalance(Long userId, BigDecimal testAmount) {
-        BigDecimal newBalance = findBalanceByUserId(userId).add(testAmount);
-        String sql = "UPDATE account SET balance = ? " +
+    public BigDecimal addToBalance(Long userId, BigDecimal amountToTransfer) {
+   //     BigDecimal newBalance = findBalanceByUserId(userId).add(testAmount);
+        String sql = "UPDATE account SET balance = balance + ? " +
                      "WHERE user_id = ?;";
-        jdbcTemplate.update(sql, newBalance, userId);
-        return newBalance;
+        jdbcTemplate.update(sql, amountToTransfer, userId);
+        return findBalanceByUserId(userId);
     }
 
     @Override
-    public BigDecimal subtractFromBalance(Long userId, BigDecimal testAmount) {
-        BigDecimal newBalance = findBalanceByUserId(userId).subtract(testAmount);
-        String sql = "UPDATE account SET balance = ? " +
+    public BigDecimal subtractFromBalance(Long userId, BigDecimal amountToTransfer) {
+  //      BigDecimal newBalance = findBalanceByUserId(userId).subtract(testAmount);
+        String sql = "UPDATE account SET balance = balance - ? " +
                 "WHERE user_id = ?;";
-        jdbcTemplate.update(sql, newBalance, userId);
-        return newBalance;
+        jdbcTemplate.update(sql, amountToTransfer, userId);
+        return findBalanceByUserId(userId);
     }
 
 

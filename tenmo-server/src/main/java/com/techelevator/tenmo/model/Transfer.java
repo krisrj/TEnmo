@@ -7,8 +7,28 @@ public class Transfer {
 
     private Long senderId;
     private Long receiverId;
+
+    private Long senderAccountId;
+    private Long receiverAccountId;
+
     @NotNull
     private BigDecimal amount;
+
+    public Long getSenderAccountId() {
+        return senderAccountId;
+    }
+
+    public void setSenderAccountId(Long senderAccountId) {
+        this.senderAccountId = senderAccountId;
+    }
+
+    public Long getReceiverAccountId() {
+        return receiverAccountId;
+    }
+
+    public void setReceiverAccountId(Long receiverAccountId) {
+        this.receiverAccountId = receiverAccountId;
+    }
 
     public Long getSenderId() {
         return senderId;
