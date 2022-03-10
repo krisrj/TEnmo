@@ -9,8 +9,10 @@ public interface AccountDao {
 
     BigDecimal findBalanceByUserId(Long userId);
 
+    BigDecimal addToBalance(Long userId, BigDecimal amountToAdd);
+
+    BigDecimal subtractFromBalance(Long userId, BigDecimal testAmount);
+
     List<Account> findAllAccounts();
-
-
 
 }

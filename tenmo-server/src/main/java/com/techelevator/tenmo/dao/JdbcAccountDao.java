@@ -11,6 +11,7 @@ import java.util.List;
 @Component
 public class JdbcAccountDao implements AccountDao{
 
+    public BigDecimal testAmount = new BigDecimal(50);
     private JdbcTemplate jdbcTemplate;
 
     public JdbcAccountDao(JdbcTemplate jdbcTemplate) {
@@ -19,23 +20,38 @@ public class JdbcAccountDao implements AccountDao{
 
     @Override
     public BigDecimal findBalanceByUserId(Long userId) {
-       String sql = "Select balance\n" +
-               "From tenmo_user t \n" +
-               "Join account a On t.user_id = a.user_id\n" +
-               "Where t.user_id = ?";
-
-        BigDecimal balance = jdbcTemplate.queryForObject(sql, BigDecimal.class, userId);
-
-       return balance;
+       String sql = "SELECT balance " +
+               "FROM tenmo_user t " +
+               "JOIN account a ON t.user_id = a.user_id " +
+               "WHERE t.user_id = ?";
+        return jdbcTemplate.queryForObject(sql, BigDecimal.class, userId);
     }
+
+    //TODO Remember to swap testAmount for actual amountToAdd
+    @Override
+    public BigDecimal addToBalance(Long userId, BigDecimal testAmount) {
+        BigDecimal newBalance = findBalanceByUserId(userId).add(testAmount);
+        String sql = "UPDATE account SET balance = ? " +
+                     "WHERE user_id = ?;";
+        jdbcTemplate.update(sql, newBalance, userId);
+        return newBalance;
+    }
+
+    @Override
+    public BigDecimal subtractFromBalance(Long userId, BigDecimal testAmount) {
+        BigDecimal newBalance = findBalanceByUserId(userId).subtract(testAmount);
+        String sql = "UPDATE account SET balance = ? " +
+                "WHERE user_id = ?;";
+        jdbcTemplate.update(sql, newBalance, userId);
+        return newBalance;
+    }
+
 
     private Account mapRowToAccount(SqlRowSet resultSet) {
         Account account = new Account();
         account.setAccount_id(resultSet.getLong("account_id"));
         account.setUser_id(resultSet.getLong("user_Id"));
         account.setBalance(resultSet.getBigDecimal("balance"));
-
-
         return account;
     }
     
