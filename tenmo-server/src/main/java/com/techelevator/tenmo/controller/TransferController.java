@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@PreAuthorize("isAuthenticated")
+@PreAuthorize("isAuthenticated()")
 @RequestMapping("/user/account/transfer")
 @RestController
 public class TransferController {
@@ -21,9 +21,9 @@ public class TransferController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String newTransferv1(@Valid @RequestBody Transfer transfer) {
-
-        return transferDao.newTransferv1(transfer.getSenderAccountId(), transfer.getReceiverId(),
+    public String newTransfer(@Valid @RequestBody Transfer transfer) {
+    // Add conditions for success/failure here
+        return transferDao.newTransfer(transfer.getSenderAccountId(), transfer.getReceiverAccountId(),
                 transfer.getAmount());
     }
 

@@ -27,30 +27,27 @@ public class JdbcAccountDao implements AccountDao{
         return jdbcTemplate.queryForObject(sql, BigDecimal.class, userId);
     }
 
-    //TODO Remember to swap testAmount for actual amountToAdd
     @Override
-    public BigDecimal addToBalance(Long userId, BigDecimal amountToTransfer) {
-   //     BigDecimal newBalance = findBalanceByUserId(userId).add(testAmount);
+    public BigDecimal addToBalance(Long receiverAccountId, BigDecimal amountToTransfer) {
         String sql = "UPDATE account SET balance = balance + ? " +
-                     "WHERE user_id = ?;";
-        jdbcTemplate.update(sql, amountToTransfer, userId);
-        return findBalanceByUserId(userId);
+                     "WHERE account_to = ?;";
+        jdbcTemplate.update(sql, amountToTransfer, receiverAccountId);
+        return findBalanceByUserId(receiverAccountId);
     }
 
     @Override
-    public BigDecimal subtractFromBalance(Long userId, BigDecimal amountToTransfer) {
-  //      BigDecimal newBalance = findBalanceByUserId(userId).subtract(testAmount);
+    public BigDecimal subtractFromBalance(Long senderAccountId, BigDecimal amountToTransfer) {
         String sql = "UPDATE account SET balance = balance - ? " +
-                "WHERE user_id = ?;";
-        jdbcTemplate.update(sql, amountToTransfer, userId);
-        return findBalanceByUserId(userId);
+                "WHERE account_from = ?;";
+        jdbcTemplate.update(sql, amountToTransfer, senderAccountId);
+        return findBalanceByUserId(senderAccountId);
     }
 
 
     private Account mapRowToAccount(SqlRowSet resultSet) {
         Account account = new Account();
-        account.setAccount_id(resultSet.getLong("account_id"));
-        account.setUser_id(resultSet.getLong("user_Id"));
+        account.setAccountId(resultSet.getLong("account_id"));
+        account.setUserId(resultSet.getLong("user_Id"));
         account.setBalance(resultSet.getBigDecimal("balance"));
         return account;
     }

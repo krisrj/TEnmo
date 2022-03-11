@@ -16,76 +16,25 @@ public class JdbcTransferDao implements TransferDao{
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
     @Autowired
     private AccountDao accountDao;
 
-//    @Override
-//    public String sendTransfer(Long senderId, Long receiverId, BigDecimal amount) {
-//
-//    }
-
-    // If sender != receiver
-    // if amount isn't more than current account balance
-    //
-
-
-
-
-
-//    @Override
-//    public BigDecimal updateSenderBalance(@Valid BigDecimal amount, Long senderId) {
-//        // Get balance of sender
-        // Update balance by amount (PUT new amount in)
-//        String sql = "SELECT balance FROM account " +
-//                     "WHERE user_id = ?;";
-//        BigDecimal result;
-//        result = jdbcTemplate.queryForObject(sql, BigDecimal.class, senderId);
-//
-//            BigDecimal newBalance = result.subtract(testAmount);
-//            return newBalance;
-//    }
-
-    @Override
-    public BigDecimal updateSenderBalance(BigDecimal amount, Long senderId) {
-        return null;
-    }
-
     @Transactional
     @Override
-    public String newTransferv1(Long senderId, Long receiverId, BigDecimal amountToTransfer) {
+    public String newTransfer(Long senderAccountId, Long receiverAccountId, BigDecimal amountToTransfer) {
         // Sql string to insert into Transfer
+        //if else here
+        // updated status_id here
+
         String sql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, " +
                 "account_from, account_to, amount) " +
                 "VALUES (2, 2, ?, ?, ?);";
         // This updates the empty values that were inserted with the included
         // values
-        jdbcTemplate.update(sql, senderId, receiverId, amountToTransfer);
-        accountDao.addToBalance(receiverId, amountToTransfer);
-        accountDao.subtractFromBalance(senderId, amountToTransfer);
+        jdbcTemplate.update(sql, senderAccountId, receiverAccountId, amountToTransfer);
+        accountDao.addToBalance(receiverAccountId, amountToTransfer);
+        accountDao.subtractFromBalance(senderAccountId, amountToTransfer);
         return "Transfer complete.";
     }
-
-    @Override
-    public BigDecimal updateReceiverBalance(BigDecimal amount, Long receiverId) {
-        return null;
-    }
-
-    @Override
-    public BigDecimal updateSenderBalance(Long senderId) {
-        return null;
-    }
-
-    @Override
-    public BigDecimal updateReceiverBalance(Long receiverId) {
-        return null;
-    }
-
-    // Takes as input senderId, receiverId, amount
-        // Calls updateSenderBalance, then updateReceiverBalance
-        // by the amount specified,
-        // then returns a String stating "Transfer successful" and
-        // concatenate the new balance
-        // else "Not enough money, etc" upon failure
 
 }

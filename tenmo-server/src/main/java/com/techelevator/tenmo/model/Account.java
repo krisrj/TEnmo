@@ -7,9 +7,9 @@ import java.math.BigDecimal;
 public class Account {
 
     @NotNull(message = "Account ID can't be null.")
-    private Long account_id;
+    private Long accountId;
     @NotNull(message = "User ID can't be null.")
-    private Long user_id;
+    private Long userId;
     @NotNull(message = "Balance can't be null.")
     @Digits(integer=13, fraction=2)
     private BigDecimal balance;
@@ -24,25 +24,26 @@ public class Account {
         this.balance = balance;
     }
 
-    public Long getAccount_id() {
-        return account_id;
+    public Long getAccountId() {
+        return accountId;
     }
 
-    public void setAccount_id(Long account_id) {
-        this.account_id = account_id;
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
     }
 
-    //TODO Ensure this user_id getter is needed
-    public Long getUser_id(Long user_id) {
-        return this.user_id;
+    public Long getUserId() {
+        return userId;
     }
 
-
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    // Original method had things in {}, unsure if needed
+    public Long getUserId(Long userId) {
+        return this.userId;
+    }
+
     @Override
     public String toString() {
         return "Your current account balance is: " +

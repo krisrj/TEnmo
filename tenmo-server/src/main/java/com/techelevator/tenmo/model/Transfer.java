@@ -3,14 +3,13 @@ package com.techelevator.tenmo.model;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
+//TODO Clean this class up for erroneous methods
 public class Transfer {
 
-    private Long senderId;
-    private Long receiverId;
-
+    private Long senderUserId;
+    private Long receiverUserId;
     private Long senderAccountId;
     private Long receiverAccountId;
-
     @NotNull
     private BigDecimal amount;
 
@@ -30,20 +29,20 @@ public class Transfer {
         this.receiverAccountId = receiverAccountId;
     }
 
-    public Long getSenderId() {
-        return senderId;
+    public Long getSenderUserId() {
+        return senderUserId;
     }
 
-    public void setSenderId(Long senderId) {
-        this.senderId = senderId;
+    public void setSenderUserId(Long senderUserId) {
+        this.senderUserId = senderUserId;
     }
 
-    public Long getReceiverId() {
-        return receiverId;
+    public Long getReceiverUserId() {
+        return receiverUserId;
     }
 
-    public void setReceiverId(Long receiverId) {
-        this.receiverId = receiverId;
+    public void setReceiverUserId(Long receiverUserId) {
+        this.receiverUserId = receiverUserId;
     }
 
     public BigDecimal getAmount() {
