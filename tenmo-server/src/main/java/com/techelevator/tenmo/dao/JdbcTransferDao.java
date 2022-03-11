@@ -21,7 +21,7 @@ public class JdbcTransferDao implements TransferDao{
 
     @Transactional
     @Override
-    public String newTransfer(Long senderAccountId, Long receiverAccountId, BigDecimal amountToTransfer) {
+    public String newTransfer(Long senderAccountId, Long receiverAccountId, BigDecimal amount) {
         // Sql string to insert into Transfer
         //if else here
         // updated status_id here
@@ -31,9 +31,10 @@ public class JdbcTransferDao implements TransferDao{
                 "VALUES (2, 2, ?, ?, ?);";
         // This updates the empty values that were inserted with the included
         // values
-        jdbcTemplate.update(sql, senderAccountId, receiverAccountId, amountToTransfer);
-        accountDao.addToBalance(receiverAccountId, amountToTransfer);
-        accountDao.subtractFromBalance(senderAccountId, amountToTransfer);
+
+        jdbcTemplate.update(sql, senderAccountId, receiverAccountId, amount);
+        accountDao.addToBalance(receiverAccountId, amount);
+        accountDao.subtractFromBalance(senderAccountId, amount);
         return "Transfer complete.";
     }
 

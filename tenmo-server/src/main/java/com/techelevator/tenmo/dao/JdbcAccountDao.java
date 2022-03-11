@@ -21,26 +21,32 @@ public class JdbcAccountDao implements AccountDao{
     @Override
     public BigDecimal findBalanceByUserId(Long userId) {
        String sql = "SELECT balance " +
-               "FROM tenmo_user t " +
-               "JOIN account a ON t.user_id = a.user_id " +
-               "WHERE t.user_id = ?";
+               "FROM account " +
+               "WHERE user_id = ?";
         return jdbcTemplate.queryForObject(sql, BigDecimal.class, userId);
     }
 
-    @Override
-    public BigDecimal addToBalance(Long receiverAccountId, BigDecimal amountToTransfer) {
-        String sql = "UPDATE account SET balance = balance + ? " +
-                     "WHERE account_to = ?;";
-        jdbcTemplate.update(sql, amountToTransfer, receiverAccountId);
-        return findBalanceByUserId(receiverAccountId);
+    public BigDecimal findBalanceByAccountId(Long accountId) {
+        String sql = "SELECT balance " +
+                "FROM account " +
+                "WHERE account_id = ?";
+        return jdbcTemplate.queryForObject(sql, BigDecimal.class, accountId);
     }
 
     @Override
-    public BigDecimal subtractFromBalance(Long senderAccountId, BigDecimal amountToTransfer) {
+    public BigDecimal addToBalance(Long receiverAccountId, BigDecimal amount) {
+        String sql = "UPDATE account SET balance = balance + ? " +
+                     "WHERE account_id = ?;";
+        jdbcTemplate.update(sql, amount, receiverAccountId);
+        return findBalanceByAccountId(receiverAccountId);
+    }
+
+    @Override
+    public BigDecimal subtractFromBalance(Long senderAccountId, BigDecimal amount) {
         String sql = "UPDATE account SET balance = balance - ? " +
-                "WHERE account_from = ?;";
-        jdbcTemplate.update(sql, amountToTransfer, senderAccountId);
-        return findBalanceByUserId(senderAccountId);
+                "WHERE account_id = ?;";
+        jdbcTemplate.update(sql, amount, senderAccountId);
+        return findBalanceByAccountId(senderAccountId);
     }
 
 
