@@ -3,16 +3,14 @@ package com.techelevator.tenmo.dao;
 import com.techelevator.tenmo.model.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.Valid;
 import java.math.BigDecimal;
 
 @Component
 public class JdbcTransferDao implements TransferDao{
-
-    public BigDecimal testAmount = new BigDecimal(50);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -22,20 +20,24 @@ public class JdbcTransferDao implements TransferDao{
     @Transactional
     @Override
     public String newTransfer(Long senderAccountId, Long receiverAccountId, BigDecimal amount) {
-        // Sql string to insert into Transfer
-        //if else here
-        // updated status_id here
-
+            // This updates the transfer table with relevant details
         String sql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, " +
                 "account_from, account_to, amount) " +
                 "VALUES (2, 2, ?, ?, ?);";
-        // This updates the empty values that were inserted with the included
-        // values
-
         jdbcTemplate.update(sql, senderAccountId, receiverAccountId, amount);
+
+            // These two methods adjust the pertinent balances
         accountDao.addToBalance(receiverAccountId, amount);
         accountDao.subtractFromBalance(senderAccountId, amount);
-        return "Transfer complete.";
-    }
 
+            // Setting up UserId variables to use in the answer String
+        String senderUsername = accountDao.getUsernameByAccountId(senderAccountId);
+        String receiverUsername = accountDao.getUsernameByAccountId(receiverAccountId);
+
+            // String answer that will be displayed to the user
+        String answer = "Transfer of " + amount + " TE Bucks from " + senderUsername +
+                " to " + receiverUsername + " was successful.";
+        return answer;
+    }
 }
+

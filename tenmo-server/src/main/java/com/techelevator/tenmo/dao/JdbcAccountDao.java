@@ -19,6 +19,22 @@ public class JdbcAccountDao implements AccountDao{
     }
 
     @Override
+    public Long getUserIdByAccountId(Long accountId) {
+        String sql = "SELECT user_id " +
+                "FROM account " +
+                "WHERE account_id = ?";
+        return jdbcTemplate.queryForObject(sql, Long.class, accountId);
+    }
+
+    @Override
+    public String getUsernameByAccountId(Long accountId) {
+        String sql = "SELECT t.username FROM tenmo_user t " +
+                     "JOIN account a ON a.user_id = t.user_id " +
+                     "WHERE a.account_id = ?;";
+        return jdbcTemplate.queryForObject(sql, String.class, accountId);
+    }
+
+    @Override
     public BigDecimal findBalanceByUserId(Long userId) {
        String sql = "SELECT balance " +
                "FROM account " +
@@ -36,7 +52,7 @@ public class JdbcAccountDao implements AccountDao{
     @Override
     public BigDecimal addToBalance(Long receiverAccountId, BigDecimal amount) {
         String sql = "UPDATE account SET balance = balance + ? " +
-                     "WHERE account_id = ?;";
+                     "WHERE account_id = ?";
         jdbcTemplate.update(sql, amount, receiverAccountId);
         return findBalanceByAccountId(receiverAccountId);
     }
@@ -44,7 +60,7 @@ public class JdbcAccountDao implements AccountDao{
     @Override
     public BigDecimal subtractFromBalance(Long senderAccountId, BigDecimal amount) {
         String sql = "UPDATE account SET balance = balance - ? " +
-                "WHERE account_id = ?;";
+                "WHERE account_id = ?";
         jdbcTemplate.update(sql, amount, senderAccountId);
         return findBalanceByAccountId(senderAccountId);
     }

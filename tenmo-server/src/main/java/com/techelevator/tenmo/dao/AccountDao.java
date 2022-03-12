@@ -7,7 +7,13 @@ import java.util.List;
 
 public interface AccountDao {
 
+    Long getUserIdByAccountId(Long accountId);
+
+    String getUsernameByAccountId(Long accountId);
+
     BigDecimal findBalanceByUserId(Long userId);
+
+    BigDecimal findBalanceByAccountId(Long accountId);
 
     BigDecimal addToBalance(Long receiverAccountId, BigDecimal amountToAdd);
 
