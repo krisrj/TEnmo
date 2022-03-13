@@ -10,7 +10,7 @@ public interface UserDao {
 
     User findUserByUsername(String username);
 
-    int findIdByUsername(String username);
+    Long findIdByUsername(String username);
 
     boolean create(String username, String password);
 }

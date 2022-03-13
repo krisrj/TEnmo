@@ -12,6 +12,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.swing.text.html.HTML.Attribute.N;
+
 @Component
 public class JdbcUserDao implements UserDao {
 
@@ -23,14 +25,12 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public int findIdByUsername(String username) {
+    public Long findIdByUsername(String username) throws UsernameNotFoundException{
         String sql = "SELECT user_id FROM tenmo_user WHERE username ILIKE ?;";
-        Integer id = jdbcTemplate.queryForObject(sql, Integer.class, username);
+        Long id = jdbcTemplate.queryForObject(sql, Long.class, username);
         if (id != null) {
             return id;
-        } else {
-            return -1;
-        }
+        } throw new UsernameNotFoundException("Username was not found.");
     }
 
     @Override

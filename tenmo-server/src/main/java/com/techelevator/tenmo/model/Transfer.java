@@ -6,13 +6,48 @@ import java.math.BigDecimal;
 //TODO Clean this class up for erroneous methods
 public class Transfer {
 
+    private Long transferId;
+    private Long transferTypeId;
+    private Long transferStatusId;
     private Long senderUserId;
     private Long receiverUserId;
-    private Long senderAccountId;
-    private Long receiverAccountId;
+    private Long currentUserId;
     @NotNull
     private BigDecimal amount;
+    private Long senderAccountId;
+    private Long receiverAccountId;
 
+    public Long getCurrentUserId() {
+        return currentUserId;
+    }
+
+    public void setCurrentUserId(Long currentUserId) {
+        this.currentUserId = currentUserId;
+    }
+
+    public Long getTransferId() {
+        return transferId;
+    }
+
+    public void setTransferId(Long transferId) {
+        this.transferId = transferId;
+    }
+
+    public Long getTransferTypeId() {
+        return transferTypeId;
+    }
+
+    public void setTransferTypeId(Long transferTypeId) {
+        this.transferTypeId = transferTypeId;
+    }
+
+    public Long getTransferStatusId() {
+        return transferStatusId;
+    }
+
+    public void setTransferStatusId(Long transferStatusId) {
+        this.transferStatusId = transferStatusId;
+    }
     public Long getSenderAccountId() {
         return senderAccountId;
     }

@@ -5,6 +5,7 @@ import com.techelevator.tenmo.dao.TransferDao;
 import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.NotAuthorizedException;
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.TransferNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 @PreAuthorize("isAuthenticated()")
 @RequestMapping("/user/account/transfer")
@@ -20,11 +23,8 @@ public class TransferController {
 
     @Autowired
     private TransferDao transferDao;
-
     @Autowired
     private UserDao userDao;
-
-
     @Autowired
     private AccountDao accountDao;
 
@@ -50,7 +50,26 @@ public class TransferController {
             } throw new NotAuthorizedException();
         } throw new NotAuthorizedException();
     }
+
+    //TODO Investigate adding constraints to transfer model
+    @RequestMapping(path = "/history", method = RequestMethod.GET)
+    public List<Transfer> getTransferHistory (Principal principal) {
+
+        return transferDao.getAllTransfersByUserId(userDao.findIdByUsername(principal.getName()));
+    }
+
+    @RequestMapping(path = "/details/{transfer_id}", method = RequestMethod.GET)
+    public Transfer getTransfer (@PathVariable Long transferId) throws TransferNotFoundException {
+        if (transferDao.getTransfer(transferId) != null) {
+            return transferDao.getTransfer(transferId);
+        } else {
+            throw new TransferNotFoundException();
+        }
+    }
+
 }
+
+
 
 
 //    throws NotAuthorizedException {
