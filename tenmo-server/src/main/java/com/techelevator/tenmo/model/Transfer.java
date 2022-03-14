@@ -16,6 +16,24 @@ public class Transfer {
     private BigDecimal amount;
     private Long senderAccountId;
     private Long receiverAccountId;
+    private String userFrom;
+    private String userTo;
+
+    public String getUserFrom() {
+        return userFrom;
+    }
+
+    public void setUserFrom(String userFrom) {
+        this.userFrom = userFrom;
+    }
+
+    public String getUserTo() {
+        return userTo;
+    }
+
+    public void setUserTo(String userTo) {
+        this.userTo = userTo;
+    }
 
     public Long getCurrentUserId() {
         return currentUserId;

@@ -56,9 +56,10 @@ public class JdbcTransferDao implements TransferDao{
     //TODO Handle exception if currentUserId doesn't match any in database
     @Override
     public List<Transfer> getAllTransfersByUserId(Long currentUserId) {
-        String sql = "SELECT t.transfer_id, u.username, u2.username, t.amount " +
+        String sql = "SELECT transfer_id, u2.username " +
+                "AS receiver, u.username AS sender, amount " +
                 "FROM transfer t " +
-                "JOIN account a " +
+                "JOIN account a  " +
                 "ON t.account_from = a.account_id " +
                 "JOIN account b " +
                 "ON t.account_to = b.account_id " +
@@ -67,14 +68,16 @@ public class JdbcTransferDao implements TransferDao{
                 "JOIN tenmo_user u2 " +
                 "ON u2.user_id = b.user_id " +
                 "WHERE a.user_id = ? OR " +
-                "b.user_id = ? " +
+                "                b.user_id = ? " +
                 "ORDER BY transfer_id DESC;";
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, currentUserId, currentUserId);
         List<Transfer> transferList = new ArrayList<>();
         while (rowSet.next()) {
-            transferList.add(mapRowToTransfer(rowSet));
+            transferList.add(mapRowToTransfer2(rowSet));
         } return transferList;
     }
+
+
 
     private Transfer mapRowToTransfer(SqlRowSet resultSet) {
         Transfer transfer = new Transfer();
@@ -83,6 +86,16 @@ public class JdbcTransferDao implements TransferDao{
         transfer.setTransferStatusId(resultSet.getLong("transfer_status_id"));
         transfer.setSenderUserId(resultSet.getLong("account_from"));
         transfer.setReceiverUserId(resultSet.getLong("account_to"));
+        transfer.setAmount(resultSet.getBigDecimal("amount"));
+        return transfer;
+    }
+
+
+    private Transfer mapRowToTransfer2(SqlRowSet resultSet) {
+        Transfer transfer = new Transfer();
+        transfer.setTransferId(resultSet.getLong("transfer_id"));
+        transfer.setUserFrom(resultSet.getString("sender"));
+        transfer.setUserTo(resultSet.getString("receiver"));
         transfer.setAmount(resultSet.getBigDecimal("amount"));
         return transfer;
     }

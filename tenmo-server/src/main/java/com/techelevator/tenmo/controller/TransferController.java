@@ -58,7 +58,7 @@ public class TransferController {
         return transferDao.getAllTransfersByUserId(userDao.findIdByUsername(principal.getName()));
     }
 
-    @RequestMapping(path = "/details/{transfer_id}", method = RequestMethod.GET)
+    @RequestMapping(path = "/details/{transferId}", method = RequestMethod.GET)
     public Transfer getTransfer (@PathVariable Long transferId) throws TransferNotFoundException {
         if (transferDao.getTransfer(transferId) != null) {
             return transferDao.getTransfer(transferId);
