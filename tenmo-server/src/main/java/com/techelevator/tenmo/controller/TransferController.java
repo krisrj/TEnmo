@@ -35,14 +35,12 @@ public class TransferController {
     //TODO Un-Nest all of this ridiculousness
     @RequestMapping(method = RequestMethod.POST)
     public String newTransfer(@Valid @RequestBody Transfer transfer, Principal principal) throws NotAuthorizedException {
-        // Check to ensure sending account matches principal account
+        // Check to ensure sending account matches principal account, and does not match receiver account.
         if (!accountDao.getUsernameByAccountId(transfer.getReceiverAccountId()).equals(principal.getName())) {
-            // Check to ensure sending account is not the same as receiving account
             if (!transfer.getSenderAccountId().equals(transfer.getReceiverAccountId())) {
-                // Create simple variables for compareTo check
                 BigDecimal senderBalance = accountDao.findBalanceByAccountId(transfer.getSenderAccountId());
                 BigDecimal amountToSend = transfer.getAmount();
-                // Compare senderBalance to AmountToSend, fail if 0 or negative
+                // Compare senderBalance to AmountToSend. Fail if amount isn't positive or exceeds senderBalance.
                 if (senderBalance.compareTo(amountToSend) > 0 && amountToSend.compareTo(BigDecimal.ZERO) == 1) {
                     return transferDao.newTransfer(transfer.getSenderAccountId(), transfer.getReceiverAccountId(),
                             transfer.getAmount());
